@@ -1,5 +1,6 @@
 """TiTiler Router factories."""
 
+import logging
 import abc
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type, Union
@@ -66,11 +67,18 @@ from titiler.core.resources.enums import ImageType, MediaType, OptionalHeader
 from titiler.core.resources.responses import GeoJSONResponse, JSONResponse, XMLResponse
 from titiler.core.routing import EndpointScope
 
+pkg_loader = jinja2.PackageLoader(__package__, "templates")
+choice_loader = jinja2.ChoiceLoader([pkg_loader])
+
+logging.info(f"PackageLoader: {pkg_loader.list_templates()}")
+logging.info(f"ChoiceLoader: {choice_loader.list_templates()}")
+
 DEFAULT_TEMPLATES = Jinja2Templates(
-    directory="",
-    loader=jinja2.ChoiceLoader([jinja2.PackageLoader(__package__, "templates")]),
+    directory=".",
+    loader=choice_loader,
 )  # type:ignore
 
+#print("DEFAULT_TEMPLATES DIRECTORY: ", DEFAULT_TEMPLATES)
 
 img_endpoint_params: Dict[str, Any] = {
     "responses": {
